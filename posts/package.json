@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "cross-env NODE_ENV=test jest --testTimeout=10000",
     "start": "nodemon index.js"
   },
   "keywords": [],
