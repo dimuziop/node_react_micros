@@ -14,5 +14,14 @@ describe('Post Endpoints', () => {
     }
     expect(res.statusCode).toEqual(201)
     expect(res.body).toMatchObject(desiredResult);
-  })
+  }),
+    it('should receive an empty posts object', async () => {
+      const res = await request(app)
+        .get('/posts').send()
+
+      const desiredResult = {}
+
+      expect(res.statusCode).toEqual(200)
+      expect(res.body).toMatchObject(desiredResult);
+    })
 })
