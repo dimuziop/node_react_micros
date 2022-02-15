@@ -6,14 +6,42 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
+const posts = {};
+
 app.get("/posts", (req, res) => {
 
-  res.send({ status: 'OK' });
+  res.send(posts);
 
 });
 
 app.post('/events', (req, res) => {
-  console.log("received event: ", req.body.type)
+  const { type, data } = req.body;
+
+  if (type === "PostCreated") {
+    const { id, title } = data;
+
+    posts[id] = {
+      id, title, comments: []
+    };
+
+  }
+
+  if (type === "CommentCreated") {
+
+    const { id, content, postId } = data;
+
+    const comment = {
+      id,
+      content
+    }
+
+    const post = posts[postId];
+    post.comments.push(comment)
+
+  }
+
+  console.log(posts)
+
   res.send({})
 })
 
