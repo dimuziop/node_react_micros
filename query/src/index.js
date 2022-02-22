@@ -7,9 +7,13 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
+const EVENT_BUS_SERVICE_HOSTNAME = process.env.EVENT_BUS_SERVICE_HOSTNAME || "localhost";
+const EVENT_BUS_SERVICE_PORT = process.env.EVENT_BUS_SERVICE_PORT || "4005";
+const BASE_EVENT_BUS_URL = `http://${EVENT_BUS_SERVICE_HOSTNAME}:${EVENT_BUS_SERVICE_PORT}`;
+
 const setup = async () => {
   try {
-    const res = await axios.get("http://localhost:4005/events");
+    const res = await axios.get(`${BASE_EVENT_BUS_URL}/events`);
     console.log("RUNN");
 
     for (let event of res.data) {
