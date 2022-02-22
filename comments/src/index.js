@@ -8,6 +8,11 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
+const EVENT_BUS_SERVICE_HOSTNAME = process.env.EVENT_BUS_SERVICE_HOSTNAME || "localhost";
+const EVENT_BUS_SERVICE_PORT = process.env.EVENT_BUS_SERVICE_PORT || "4005";
+const BASE_EVENT_BUS_URL = `http://${EVENT_BUS_SERVICE_HOSTNAME}:${EVENT_BUS_SERVICE_PORT}`;
+
+
 const commentsByPostId = {};
 
 app.get("/posts/:id/comments", (req, res) => {
@@ -29,7 +34,7 @@ app.post("/posts/:id/comments", async (req, res) => {
   comments.push({ id: commentId, content, status: "pending" })
   commentsByPostId[postId] = comments;
 
-  await axios.post('http://localhost:4005/events', {
+  await axios.post(`${BASE_EVENT_BUS_URL}/events`, {
     type: "CommentCreated",
     data: {
       id: commentId, content, postId, status: "pending"
@@ -57,7 +62,7 @@ app.post('/events', async (req, res) => {
     comment.status = status;
 
 
-    await axios.post('http://localhost:4005/events', {
+    await axios.post(`${BASE_EVENT_BUS_URL}/events`, {
       type: "CommentUpdated",
       data: {
         id,
